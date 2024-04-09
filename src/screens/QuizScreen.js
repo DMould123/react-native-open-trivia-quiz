@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
-import { Picker } from '@react-native-picker/picker' // Import Picker from @react-native-picker/picker
+import { Picker } from '@react-native-picker/picker'
 import axios from 'axios'
 
 const QuizScreen = ({ navigation }) => {
@@ -45,11 +45,22 @@ const QuizScreen = ({ navigation }) => {
       // Handle end of quiz
       return null
     }
+    // Extract answer options from the question object
+    const answerOptions = [
+      ...question.incorrect_answers,
+      question.correct_answer
+    ].sort(() => Math.random() - 0.5) // Shuffle the answer options
     return (
       <View>
         <Text>{question.question}</Text>
-        {/* Render answer options here */}
-        {/* Example: <Button title={question.correct_answer} onPress={() => handleAnswer(true)} /> */}
+        {/* Render answer options as buttons */}
+        {answerOptions.map((option, index) => (
+          <Button
+            key={index}
+            title={option}
+            onPress={() => handleAnswer(option === question.correct_answer)}
+          />
+        ))}
       </View>
     )
   }
