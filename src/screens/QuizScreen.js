@@ -45,22 +45,21 @@ const QuizScreen = ({ navigation }) => {
       // Handle end of quiz
       return null
     }
-    // Extract answer options from the question object
-    const answerOptions = [
-      ...question.incorrect_answers,
-      question.correct_answer
-    ].sort(() => Math.random() - 0.5) // Shuffle the answer options
     return (
       <View>
         <Text>{question.question}</Text>
         {/* Render answer options as buttons */}
-        {answerOptions.map((option, index) => (
+        {question.incorrect_answers.map((answer, index) => (
           <Button
             key={index}
-            title={option}
-            onPress={() => handleAnswer(option === question.correct_answer)}
+            title={answer}
+            onPress={() => handleAnswer(false)}
           />
         ))}
+        <Button
+          title={question.correct_answer}
+          onPress={() => handleAnswer(true)}
+        />
       </View>
     )
   }
@@ -87,6 +86,8 @@ const QuizScreen = ({ navigation }) => {
           }
         >
           <Picker.Item label="Any" value="" />
+          <Picker.Item label="General Knowledge" value="9" />
+          <Picker.Item label="Science & Nature" value="17" />
           {/* Add more Picker items based on available categories */}
         </Picker>
       </View>
