@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -28,8 +27,23 @@ export default function App() {
             />
           )}
         </Tab.Screen>
-        <Tab.Screen name="Difficulty" component={DifficultyScreen} />
-        <Tab.Screen name="Quiz" component={QuizScreen} />
+        <Tab.Screen name="Difficulty" options={{ tabBarVisible: false }}>
+          {(props) => (
+            <DifficultyScreen
+              {...props}
+              setSelectedDifficulty={setSelectedDifficulty}
+            />
+          )}
+        </Tab.Screen>
+        <Tab.Screen
+          name="Quiz"
+          component={QuizScreen}
+          initialParams={{
+            name: name,
+            selectedCategory: selectedCategory,
+            selectedDifficulty: selectedDifficulty
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   )

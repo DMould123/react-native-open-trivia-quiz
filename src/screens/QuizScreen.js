@@ -9,9 +9,12 @@ const QuizScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     const fetchQuizQuestions = async () => {
-      const { category, difficulty } = route.params
+      const { selectedCategory, selectedDifficulty } = route.params
       try {
-        const fetchedQuestions = await fetchQuestions(category, difficulty)
+        const fetchedQuestions = await fetchQuestions(
+          selectedCategory,
+          selectedDifficulty
+        )
         setQuestions(fetchedQuestions)
       } catch (error) {
         console.error('Error fetching questions:', error)
@@ -27,6 +30,15 @@ const QuizScreen = ({ navigation, route }) => {
     setCurrentQuestionIndex(currentQuestionIndex + 1)
   }
 
+  const restartQuiz = () => {
+    // Reset all state variables to their initial values
+    setQuestions([])
+    setCurrentQuestionIndex(0)
+    setScore(0)
+    // Navigate back to the NameScreen to start a new game
+    navigation.navigate('Name')
+  }
+
   const renderQuestion = () => {
     const question = questions[currentQuestionIndex]
     if (!question) {
@@ -34,7 +46,7 @@ const QuizScreen = ({ navigation, route }) => {
         <View>
           <Text>Quiz completed!</Text>
           <Text>Final Score: {score}</Text>
-          <Button title="Restart Quiz" onPress={() => navigation.popToTop()} />
+          <Button title="Restart Quiz" onPress={restartQuiz} />
         </View>
       )
     }

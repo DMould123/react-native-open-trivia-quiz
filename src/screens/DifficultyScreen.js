@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, Button } from 'react-native'
 
 const DifficultyScreen = ({ navigation, setSelectedDifficulty }) => {
-  const [selectedDifficulty, setSelectedDifficultyLocal] = useState('')
+  const [selectedDifficultyLocal, setSelectedDifficultyLocal] = useState('')
 
   const handleDifficultySelect = (difficulty) => {
     setSelectedDifficulty(difficulty)
