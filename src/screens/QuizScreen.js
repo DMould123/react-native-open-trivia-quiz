@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
-import axios from 'axios'
+import { fetchQuestions } from '../utils/apiUtils'
 
 const QuizScreen = ({ navigation }) => {
   const [name, setName] = useState('')
@@ -11,22 +11,26 @@ const QuizScreen = ({ navigation }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
 
-  useEffect(() => {
-    // Fetch questions when component mounts
-    fetchQuestions()
-  }, [])
-
-  // Function to fetch questions from the API
-  const fetchQuestions = async () => {
+  // Function to handle starting the quiz
+  const startQuiz = async () => {
     try {
-      const response = await axios.get(
-        `https://opentdb.com/api.php?amount=10&category=${selectedCategory}&difficulty=${selectedDifficulty}&type=multiple`
+      const fetchedQuestions = await fetchQuestions(
+        selectedCategory,
+        selectedDifficulty
       )
-      setQuestions(response.data.results)
+      setQuestions(fetchedQuestions)
     } catch (error) {
-      console.error('Error fetching questions:', error)
+      // Handle error gracefully
+      console.error('Error starting quiz:', error)
     }
   }
+
+  useEffect(() => {
+    // Fetch questions when component mounts
+    if (selectedCategory && selectedDifficulty) {
+      startQuiz()
+    }
+  }, [selectedCategory, selectedDifficulty])
 
   // Function to handle user's answer
   const handleAnswer = (isCorrect) => {
@@ -105,7 +109,7 @@ const QuizScreen = ({ navigation }) => {
           <Picker.Item label="Hard" value="hard" />
         </Picker>
       </View>
-      <Button title="Start Quiz" onPress={fetchQuestions} />
+      <Button title="Start Quiz" onPress={startQuiz} />
       <Text>Score: {score}</Text>
       {renderQuestion()}
     </View>
