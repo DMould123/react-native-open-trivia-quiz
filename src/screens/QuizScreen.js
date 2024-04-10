@@ -6,6 +6,8 @@ const QuizScreen = ({ navigation, route }) => {
   const [questions, setQuestions] = useState([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
+  const [selectedAnswer, setSelectedAnswer] = useState(null)
+  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false)
 
   useEffect(() => {
     const fetchQuizQuestions = async () => {
@@ -27,15 +29,17 @@ const QuizScreen = ({ navigation, route }) => {
     if (isCorrect) {
       setScore(score + 1)
     }
-    setCurrentQuestionIndex(currentQuestionIndex + 1)
+    setShowCorrectAnswer(true)
+    setTimeout(() => {
+      setShowCorrectAnswer(false)
+      setCurrentQuestionIndex(currentQuestionIndex + 1)
+    }, 1000)
   }
 
   const restartQuiz = () => {
-    // Reset all state variables to their initial values
     setQuestions([])
     setCurrentQuestionIndex(0)
     setScore(0)
-    // Navigate back to the NameScreen to start a new game
     navigation.navigate('Name')
   }
 
@@ -57,13 +61,26 @@ const QuizScreen = ({ navigation, route }) => {
           <Button
             key={index}
             title={answer}
-            onPress={() => handleAnswer(false)}
+            onPress={() => {
+              handleAnswer(false)
+              setSelectedAnswer(answer)
+            }}
           />
         ))}
         <Button
           title={question.correct_answer}
-          onPress={() => handleAnswer(true)}
+          onPress={() => {
+            handleAnswer(true)
+            setSelectedAnswer(question.correct_answer)
+          }}
         />
+        {showCorrectAnswer && (
+          <Text>
+            {selectedAnswer === question.correct_answer
+              ? 'Correct!'
+              : 'Incorrect!'}
+          </Text>
+        )}
       </View>
     )
   }
