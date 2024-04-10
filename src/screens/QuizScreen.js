@@ -1,58 +1,46 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
-import { Picker } from '@react-native-picker/picker'
+import { View, Text, Button } from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
 
-const QuizScreen = ({ navigation }) => {
-  const [name, setName] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('')
-  const [selectedDifficulty, setSelectedDifficulty] = useState('')
+const QuizScreen = ({ navigation, route }) => {
   const [questions, setQuestions] = useState([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
 
-  // Function to handle starting the quiz
-  const startQuiz = async () => {
-    try {
-      const fetchedQuestions = await fetchQuestions(
-        selectedCategory,
-        selectedDifficulty
-      )
-      setQuestions(fetchedQuestions)
-    } catch (error) {
-      // Handle error gracefully
-      console.error('Error starting quiz:', error)
-    }
-  }
-
   useEffect(() => {
-    // Fetch questions when component mounts
-    if (selectedCategory && selectedDifficulty) {
-      startQuiz()
+    const fetchQuizQuestions = async () => {
+      const { category, difficulty } = route.params
+      try {
+        const fetchedQuestions = await fetchQuestions(category, difficulty)
+        setQuestions(fetchedQuestions)
+      } catch (error) {
+        console.error('Error fetching questions:', error)
+      }
     }
-  }, [selectedCategory, selectedDifficulty])
+    fetchQuizQuestions()
+  }, [route.params])
 
-  // Function to handle user's answer
   const handleAnswer = (isCorrect) => {
     if (isCorrect) {
-      // Increment score if answer is correct
       setScore(score + 1)
     }
-    // Move to the next question
     setCurrentQuestionIndex(currentQuestionIndex + 1)
   }
 
-  // Function to render the current question
   const renderQuestion = () => {
     const question = questions[currentQuestionIndex]
     if (!question) {
-      // Handle end of quiz
-      return null
+      return (
+        <View>
+          <Text>Quiz completed!</Text>
+          <Text>Final Score: {score}</Text>
+          <Button title="Restart Quiz" onPress={() => navigation.popToTop()} />
+        </View>
+      )
     }
     return (
       <View>
         <Text>{question.question}</Text>
-        {/* Render answer options as buttons */}
         {question.incorrect_answers.map((answer, index) => (
           <Button
             key={index}
@@ -68,52 +56,7 @@ const QuizScreen = ({ navigation }) => {
     )
   }
 
-  return (
-    <View>
-      <Text>Enter your name:</Text>
-      <TextInput
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          marginBottom: 10
-        }}
-        onChangeText={(text) => setName(text)}
-        value={name}
-      />
-      <View>
-        <Text>Select Category:</Text>
-        <Picker
-          selectedValue={selectedCategory}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedCategory(itemValue)
-          }
-        >
-          <Picker.Item label="Any" value="" />
-          <Picker.Item label="General Knowledge" value="9" />
-          <Picker.Item label="Science & Nature" value="17" />
-          {/* Add more Picker items based on available categories */}
-        </Picker>
-      </View>
-      <View>
-        <Text>Select Difficulty:</Text>
-        <Picker
-          selectedValue={selectedDifficulty}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedDifficulty(itemValue)
-          }
-        >
-          <Picker.Item label="Any" value="" />
-          <Picker.Item label="Easy" value="easy" />
-          <Picker.Item label="Medium" value="medium" />
-          <Picker.Item label="Hard" value="hard" />
-        </Picker>
-      </View>
-      <Button title="Start Quiz" onPress={startQuiz} />
-      <Text>Score: {score}</Text>
-      {renderQuestion()}
-    </View>
-  )
+  return <View>{renderQuestion()}</View>
 }
 
 export default QuizScreen
