@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
 
-const NameScreen = ({ navigation, setName }) => {
+const NameScreen = ({ navigation }) => {
   const [inputName, setInputName] = useState('')
 
   const handleSubmit = () => {
-    setName(inputName)
-    navigation.navigate('Category')
+    if (inputName.trim() !== '') {
+      navigation.navigate('CategoryScreen', { name: inputName })
+    } else {
+      console.error('Please enter a valid name')
+    }
   }
 
   return (

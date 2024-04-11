@@ -17,7 +17,12 @@ const DifficultyScreen = ({ navigation, setSelectedDifficulty }) => {
       <Button title="Hard" onPress={() => handleDifficultySelect('hard')} />
       <Button
         title="Next"
-        onPress={() => navigation.navigate('Quiz')}
+        onPress={() =>
+          navigation.navigate('QuizScreen', {
+            selectedCategory,
+            selectedDifficulty: selectedDifficultyLocal
+          })
+        }
         disabled={!selectedDifficultyLocal}
       />
     </View>
