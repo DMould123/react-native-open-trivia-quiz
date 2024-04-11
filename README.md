@@ -1,10 +1,10 @@
-# Quiz App 🦁 👑
+# React Native Quiz App 🦁 👑
 
 ## Description 🌍
 
 ## Objectives 🎯
 
-The objectives of the [App Name] project include:
+The objectives of theReact Native Quiz App include:
 
 -
 -
@@ -21,7 +21,7 @@ The objectives of the [App Name] project include:
 
 ## Installation 🔧
 
-To use this app, simply clone the repository to your local machine.
+To use the React Native Quiz App, simply clone the repository to your local machine.
 
 ```bash
 git clone
