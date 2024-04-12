@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { View, Text, Button } from 'react-native'
+import { useQuiz } from '../context/quizContext'
 
-const DifficultyScreen = ({ navigation, setSelectedDifficulty }) => {
+const DifficultyScreen = ({ navigation }) => {
   const [selectedDifficultyLocal, setSelectedDifficultyLocal] = useState('')
+  const { setSelectedDifficulty } = useQuiz()
 
   const handleDifficultySelect = (difficulty) => {
     setSelectedDifficulty(difficulty)
@@ -19,7 +21,6 @@ const DifficultyScreen = ({ navigation, setSelectedDifficulty }) => {
         title="Next"
         onPress={() =>
           navigation.navigate('QuizScreen', {
-            selectedCategory,
             selectedDifficulty: selectedDifficultyLocal
           })
         }
