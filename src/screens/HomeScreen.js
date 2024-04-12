@@ -4,7 +4,7 @@ export default function HomeScreen({ navigation }) {
   const handleStartQuiz = () => {
     // Set the navigation options instead of passing as params
     navigation.setOptions({
-      setName: navigation.setParams // Set setName in navigation options
+      setName: navigation.setParams
     })
     // Navigate to the NameScreen to start the quiz
     navigation.navigate('Quiz', { screen: 'NameScreen' })
