@@ -9,13 +9,16 @@ import NameScreen from './src/screens/NameScreen'
 import CategoryScreen from './src/screens/CategoryScreen'
 import DifficultyScreen from './src/screens/DifficultyScreen'
 import QuizScreen from './src/screens/QuizScreen'
+import { QuizProvider } from './src/context/quizContext'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const Tab = createBottomTabNavigator()
 const Stack = createStackNavigator()
 
 // Define QuizStack component outside of App component
-const QuizStack = ({ name, selectedCategory, selectedDifficulty }) => {
+const QuizStack = ({ route }) => {
+  const { name, selectedDifficulty, setSelectedCategory } = route.params
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -25,9 +28,17 @@ const QuizStack = ({ name, selectedCategory, selectedDifficulty }) => {
       />
       <Stack.Screen
         name="CategoryScreen"
-        component={CategoryScreen}
-        initialParams={{ selectedCategory: selectedCategory }}
-      />
+        options={{
+          headerShown: false // Hide the header for CategoryScreen
+        }}
+      >
+        {(props) => (
+          <CategoryScreen
+            {...props}
+            setSelectedCategory={setSelectedCategory} // Pass setSelectedCategory as a prop to CategoryScreen
+          />
+        )}
+      </Stack.Screen>
       <Stack.Screen
         name="DifficultyScreen"
         component={DifficultyScreen}
@@ -40,33 +51,25 @@ const QuizStack = ({ name, selectedCategory, selectedDifficulty }) => {
 
 // App component
 export default function App() {
-  const [name, setName] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('')
-  const [selectedDifficulty, setSelectedDifficulty] = useState('')
-
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="About" component={AboutScreen} />
-        <Tab.Screen name="Contact" component={ContactScreen} />
-        <Tab.Screen
-          name="Quiz"
-          options={{
-            tabBarVisible: false,
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="question" color={color} size={size} />
-            )
-          }}
-          component={QuizStack} // Pass QuizStack directly to component prop
-          initialParams={{
-            // Pass initial params if needed
-            name: name,
-            selectedCategory: selectedCategory,
-            selectedDifficulty: selectedDifficulty
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <QuizProvider>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="About" component={AboutScreen} />
+          <Tab.Screen name="Contact" component={ContactScreen} />
+          <Tab.Screen
+            name="Quiz"
+            options={{
+              tabBarVisible: false,
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="question" color={color} size={size} />
+              )
+            }}
+            component={QuizStack}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </QuizProvider>
   )
 }

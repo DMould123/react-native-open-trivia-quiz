@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Button } from 'react-native'
 import axios from 'axios'
+import { useNavigation } from '@react-navigation/native'
+import { useQuiz } from '../context/quizContext'
 
-const CategoryScreen = ({ navigation, setSelectedCategory }) => {
+const CategoryScreen = () => {
   const [categories, setCategories] = useState([])
+  const { setSelectedCategory } = useQuiz()
+  const navigation = useNavigation()
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -19,7 +23,7 @@ const CategoryScreen = ({ navigation, setSelectedCategory }) => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category)
-    navigation.navigate('Difficulty')
+    navigation.navigate('DifficultyScreen')
   }
 
   return (
