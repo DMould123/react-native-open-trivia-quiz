@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Button } from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
-const QuizScreen = ({ navigation, route }) => {
+const QuizScreen = () => {
+  const navigation = useNavigation()
+  const route = useRoute()
   const [questions, setQuestions] = useState([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false)
+  const { selectedCategory, selectedDifficulty } = route.params
 
   useEffect(() => {
     const fetchQuizQuestions = async () => {
-      const { selectedCategory, selectedDifficulty } = route.params
+      console.log('Selected Category:', selectedCategory)
+      console.log('Selected Difficulty:', selectedDifficulty)
       try {
         const fetchedQuestions = await fetchQuestions(
           selectedCategory,
           selectedDifficulty
         )
+        console.log('Fetched Questions:', fetchedQuestions)
         setQuestions(fetchedQuestions)
       } catch (error) {
         console.error('Error fetching questions:', error)
@@ -37,10 +43,9 @@ const QuizScreen = ({ navigation, route }) => {
   }
 
   const restartQuiz = () => {
-    setQuestions([])
     setCurrentQuestionIndex(0)
     setScore(0)
-    navigation.navigate('Name')
+    navigation.navigate('Home')
   }
 
   const renderQuestion = () => {

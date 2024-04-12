@@ -1,14 +1,19 @@
-import React, { useState } from 'react'
 import { View, Text, Button } from 'react-native'
 import { useQuiz } from '../context/quizContext'
 
 const DifficultyScreen = ({ navigation }) => {
-  const [selectedDifficultyLocal, setSelectedDifficultyLocal] = useState('')
-  const { setSelectedDifficulty } = useQuiz()
+  const { selectedCategory, selectedDifficulty } = useQuiz()
 
   const handleDifficultySelect = (difficulty) => {
-    setSelectedDifficulty(difficulty)
-    setSelectedDifficultyLocal(difficulty)
+    // Check if selectedCategory and selectedDifficulty are not undefined
+    if (selectedCategory && selectedDifficulty) {
+      navigation.navigate('QuizScreen', {
+        selectedCategory,
+        selectedDifficulty
+      })
+    } else {
+      console.error('Selected category or difficulty is undefined')
+    }
   }
 
   return (
@@ -17,15 +22,6 @@ const DifficultyScreen = ({ navigation }) => {
       <Button title="Easy" onPress={() => handleDifficultySelect('easy')} />
       <Button title="Medium" onPress={() => handleDifficultySelect('medium')} />
       <Button title="Hard" onPress={() => handleDifficultySelect('hard')} />
-      <Button
-        title="Next"
-        onPress={() =>
-          navigation.navigate('QuizScreen', {
-            selectedDifficulty: selectedDifficultyLocal
-          })
-        }
-        disabled={!selectedDifficultyLocal}
-      />
     </View>
   )
 }
