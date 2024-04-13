@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, Button } from 'react-native'
-import axios from 'axios'
-import { useNavigation } from '@react-navigation/native'
 import { useQuiz } from '../context/quizContext'
+import axios from 'axios' // Import axios for API requests
 
-const CategoryScreen = () => {
+const CategoryScreen = ({ navigation }) => {
+  const { setSelectedCategory, setSelectedDifficulty } = useQuiz() // Using useQuiz hook to access context values
   const [categories, setCategories] = useState([])
-  const { setSelectedCategory, error, setError } = useQuiz()
-  const navigation = useNavigation()
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -16,7 +14,6 @@ const CategoryScreen = () => {
         setCategories(response.data.trivia_categories)
       } catch (error) {
         console.error('Error fetching categories:', error)
-        setError('Failed to fetch categories. Please try again.')
       }
     }
     fetchCategories()
@@ -24,12 +21,17 @@ const CategoryScreen = () => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category)
-    navigation.navigate('DifficultyScreen')
+    setSelectedDifficulty('easy') // Set a default difficulty when selecting a category
+    // Check if selectedCategory is not undefined
+    if (category !== undefined) {
+      navigation.navigate('DifficultyScreen')
+    } else {
+      console.error('Selected category is undefined')
+    }
   }
 
   return (
     <View>
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <Text>Select Category:</Text>
       {categories.map((category) => (
         <Button

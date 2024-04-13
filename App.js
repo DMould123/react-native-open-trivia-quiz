@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -17,7 +16,7 @@ const Stack = createStackNavigator()
 
 // Define QuizStack component outside of App component
 const QuizStack = ({ route }) => {
-  const { name, selectedDifficulty, setSelectedCategory } = route.params
+  const { name, selectedCategory, selectedDifficulty } = route.params
 
   return (
     <Stack.Navigator>
@@ -35,7 +34,8 @@ const QuizStack = ({ route }) => {
         {(props) => (
           <CategoryScreen
             {...props}
-            setSelectedCategory={setSelectedCategory} // Pass setSelectedCategory as a prop to CategoryScreen
+            // Pass setSelectedCategory as a prop to CategoryScreen
+            setSelectedCategory={route.params.setSelectedCategory}
           />
         )}
       </Stack.Screen>
@@ -44,7 +44,11 @@ const QuizStack = ({ route }) => {
         component={DifficultyScreen}
         initialParams={{ selectedDifficulty: selectedDifficulty }}
       />
-      <Stack.Screen name="QuizScreen" component={QuizScreen} />
+      <Stack.Screen
+        name="QuizScreen"
+        component={QuizScreen}
+        initialParams={{ name, selectedCategory, selectedDifficulty }} // Pass the selectedCategory and selectedDifficulty as initial params
+      />
     </Stack.Navigator>
   )
 }
