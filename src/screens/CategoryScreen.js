@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, Button } from 'react-native'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
@@ -6,7 +6,7 @@ import { useQuiz } from '../context/quizContext'
 
 const CategoryScreen = () => {
   const [categories, setCategories] = useState([])
-  const { setSelectedCategory } = useQuiz()
+  const { setSelectedCategory, error, setError } = useQuiz()
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -16,6 +16,7 @@ const CategoryScreen = () => {
         setCategories(response.data.trivia_categories)
       } catch (error) {
         console.error('Error fetching categories:', error)
+        setError('Failed to fetch categories. Please try again.')
       }
     }
     fetchCategories()
@@ -28,6 +29,7 @@ const CategoryScreen = () => {
 
   return (
     <View>
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
       <Text>Select Category:</Text>
       {categories.map((category) => (
         <Button
