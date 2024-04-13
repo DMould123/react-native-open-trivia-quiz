@@ -1,19 +1,52 @@
-import { View, Text, Button } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 
-export default function HomeScreen({ navigation }) {
+const HomeScreen = ({ navigation }) => {
   const handleStartQuiz = () => {
-    // Set the navigation options instead of passing as params
-    navigation.setOptions({
-      setName: navigation.setParams
-    })
-    // Navigate to the NameScreen to start the quiz
     navigation.navigate('Quiz', { screen: 'NameScreen' })
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Welcome to the Quiz App!</Text>
-      <Button title="Start Quiz" onPress={handleStartQuiz} />
+    <View style={styles.container}>
+      <Image
+        source={require('../../assets/quiz.jpg')}
+        style={styles.image}
+        resizeMode="cover"
+      />
+      <Text style={styles.title}>Welcome to the Quiz App!</Text>
+      <TouchableOpacity style={styles.button} onPress={handleStartQuiz}>
+        <Text style={styles.buttonText}>Start Quiz</Text>
+      </TouchableOpacity>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20
+  },
+  image: {
+    width: '75%',
+    height: 200,
+    marginBottom: 20
+  },
+  button: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold'
+  }
+})
+
+export default HomeScreen
