@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
 
 const NameScreen = ({ navigation }) => {
   const [inputName, setInputName] = useState('')
@@ -13,15 +13,10 @@ const NameScreen = ({ navigation }) => {
   }
 
   return (
-    <View>
-      <Text>Enter your name:</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Enter your name:</Text>
       <TextInput
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          marginBottom: 10
-        }}
+        style={styles.input}
         onChangeText={(text) => setInputName(text)}
         value={inputName}
       />
@@ -29,5 +24,28 @@ const NameScreen = ({ navigation }) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: '#fff'
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10
+  }
+})
 
 export default NameScreen
