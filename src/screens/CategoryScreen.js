@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button, ActivityIndicator } from 'react-native'
+import {
+  View,
+  Text,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+  ScrollView
+} from 'react-native'
 import { useQuiz } from '../context/quizContext'
 import axios from 'axios'
 
@@ -36,7 +43,7 @@ const CategoryScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     )
@@ -44,7 +51,7 @@ const CategoryScreen = ({ navigation }) => {
 
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.container}>
         <Text>{error}</Text>
         <Button
           title="Retry"
@@ -58,17 +65,42 @@ const CategoryScreen = ({ navigation }) => {
   }
 
   return (
-    <View>
-      <Text>Select Category:</Text>
+    <ScrollView contentContainerStyle={styles.contentContainer}>
+      <Text style={styles.title}>Select Category:</Text>
       {categories.map((category) => (
-        <Button
-          key={category.id}
-          title={category.name}
-          onPress={() => handleCategorySelect(category.id.toString())}
-        />
+        <View key={category.id} style={styles.categoryItem}>
+          <Button
+            title={category.name}
+            onPress={() => handleCategorySelect(category.id.toString())}
+          />
+        </View>
       ))}
-    </View>
+    </ScrollView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff'
+  },
+  contentContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20
+  },
+  categoryItem: {
+    marginBottom: 10
+  }
+})
 
 export default CategoryScreen
