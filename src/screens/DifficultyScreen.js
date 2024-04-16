@@ -1,4 +1,4 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, StyleSheet } from 'react-native'
 import { useQuiz } from '../context/quizContext'
 
 const DifficultyScreen = ({ navigation }) => {
@@ -19,13 +19,41 @@ const DifficultyScreen = ({ navigation }) => {
   }
 
   return (
-    <View>
-      <Text>Select Difficulty:</Text>
-      <Button title="Easy" onPress={() => handleDifficultySelect('easy')} />
-      <Button title="Medium" onPress={() => handleDifficultySelect('medium')} />
-      <Button title="Hard" onPress={() => handleDifficultySelect('hard')} />
+    <View style={styles.container}>
+      <Text style={styles.title}>Select Difficulty:</Text>
+      <View style={styles.buttonContainer}>
+        <Button title="Easy" onPress={() => handleDifficultySelect('easy')} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Medium"
+          onPress={() => handleDifficultySelect('medium')}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="Hard" onPress={() => handleDifficultySelect('hard')} />
+      </View>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 20
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20
+  },
+  buttonContainer: {
+    marginVertical: 10,
+    width: '80%'
+  }
+})
 
 export default DifficultyScreen
