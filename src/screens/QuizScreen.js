@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, StyleSheet } from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
 import { useNavigation, useRoute } from '@react-navigation/native'
 
@@ -15,14 +15,11 @@ const QuizScreen = () => {
 
   useEffect(() => {
     const fetchQuizQuestions = async () => {
-      console.log('Selected Category:', selectedCategory)
-      console.log('Selected Difficulty:', selectedDifficulty)
       try {
         const fetchedQuestions = await fetchQuestions(
           selectedCategory,
           selectedDifficulty
         )
-        console.log('Fetched Questions:', fetchedQuestions)
         setQuestions(fetchedQuestions)
       } catch (error) {
         console.error('Error fetching questions:', error)
@@ -52,35 +49,38 @@ const QuizScreen = () => {
     const question = questions[currentQuestionIndex]
     if (!question) {
       return (
-        <View>
-          <Text>Quiz completed!</Text>
-          <Text>Final Score: {score}</Text>
+        <View style={styles.container}>
+          <Text style={styles.text}>Quiz completed!</Text>
+          <Text style={styles.text}>Final Score: {score}</Text>
           <Button title="Restart Quiz" onPress={restartQuiz} />
         </View>
       )
     }
     return (
-      <View>
-        <Text>{question.question}</Text>
+      <View style={styles.container}>
+        <Text style={styles.text}>{question.question}</Text>
         {question.incorrect_answers.map((answer, index) => (
+          <View style={styles.buttonContainer} key={index}>
+            <Button
+              title={answer}
+              onPress={() => {
+                handleAnswer(false)
+                setSelectedAnswer(answer)
+              }}
+            />
+          </View>
+        ))}
+        <View style={styles.buttonContainer}>
           <Button
-            key={index}
-            title={answer}
+            title={question.correct_answer}
             onPress={() => {
-              handleAnswer(false)
-              setSelectedAnswer(answer)
+              handleAnswer(true)
+              setSelectedAnswer(question.correct_answer)
             }}
           />
-        ))}
-        <Button
-          title={question.correct_answer}
-          onPress={() => {
-            handleAnswer(true)
-            setSelectedAnswer(question.correct_answer)
-          }}
-        />
+        </View>
         {showCorrectAnswer && (
-          <Text>
+          <Text style={styles.text}>
             {selectedAnswer === question.correct_answer
               ? 'Correct!'
               : 'Incorrect!'}
@@ -90,7 +90,26 @@ const QuizScreen = () => {
     )
   }
 
-  return <View>{renderQuestion()}</View>
+  return <View style={styles.container}>{renderQuestion()}</View>
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 20
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: 'center'
+  },
+  buttonContainer: {
+    marginVertical: 5,
+    width: '80%'
+  }
+})
 
 export default QuizScreen
