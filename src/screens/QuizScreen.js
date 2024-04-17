@@ -58,7 +58,7 @@ const QuizScreen = () => {
     }
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>{question.question}</Text>
+        <Text style={styles.question}>{question.question}</Text>
         {question.incorrect_answers.map((answer, index) => (
           <View style={styles.buttonContainer} key={index}>
             <Button
@@ -80,7 +80,14 @@ const QuizScreen = () => {
           />
         </View>
         {showCorrectAnswer && (
-          <Text style={styles.text}>
+          <Text
+            style={[
+              styles.text,
+              selectedAnswer === question.correct_answer
+                ? styles.correct
+                : styles.incorrect
+            ]}
+          >
             {selectedAnswer === question.correct_answer
               ? 'Correct!'
               : 'Incorrect!'}
@@ -101,7 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 20
   },
-  text: {
+  question: {
     fontSize: 18,
     marginBottom: 10,
     textAlign: 'center'
@@ -109,6 +116,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: 5,
     width: '80%'
+  },
+  text: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 10
+  },
+  correct: {
+    color: 'green'
+  },
+  incorrect: {
+    color: 'red'
   }
 })
 
