@@ -28,7 +28,7 @@ const QuizStack = ({ route }) => {
       <Stack.Screen
         name="CategoryScreen"
         options={{
-          headerShown: false // Hide the header for CategoryScreen
+          headerShown: false
         }}
       >
         {(props) => (
@@ -47,7 +47,7 @@ const QuizStack = ({ route }) => {
       <Stack.Screen
         name="QuizScreen"
         component={QuizScreen}
-        initialParams={{ name, selectedCategory, selectedDifficulty }} // Pass the selectedCategory and selectedDifficulty as initial params
+        initialParams={{ name, selectedCategory, selectedDifficulty }}
       />
     </Stack.Navigator>
   )
