@@ -1,10 +1,35 @@
-import React, { useState } from 'react'
-import { View, Text, Button, StyleSheet, Linking, Image } from 'react-native'
+import React, { useRef, useEffect, useState } from 'react'
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Linking,
+  Image,
+  Animated
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const AboutScreen = ({ navigation }) => {
   const portfolioUrl = 'https://david-mould-portfolio-page.netlify.app'
-  const [hoveredIcon, setHoveredIcon] = useState(null)
+  const titleAnim = useRef(new Animated.Value(0)).current
+  const imageAnim = useRef(new Animated.Value(0)).current
+  const [hasAnimated, setHasAnimated] = useState(false)
+
+  useEffect(() => {
+    if (!hasAnimated) {
+      Animated.timing(titleAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true
+      }).start()
+      Animated.timing(imageAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true
+      }).start(() => setHasAnimated(true))
+    }
+  }, [hasAnimated])
 
   const handleVisitWebsite = () => {
     Linking.openURL(portfolioUrl)
@@ -12,12 +37,40 @@ const AboutScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>About Me</Text>
-      <Image
+      <Animated.Text
+        style={[
+          styles.title,
+          {
+            transform: [
+              {
+                translateY: titleAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [100, 0]
+                })
+              }
+            ]
+          }
+        ]}
+      >
+        About Me
+      </Animated.Text>
+      <Animated.Image
         source={{
           uri: 'https://res.cloudinary.com/dele4dvi9/image/upload/v1680781966/memory-game-pictures/1679569823407_u98yg8.jpg'
         }}
-        style={styles.image}
+        style={[
+          styles.image,
+          {
+            transform: [
+              {
+                scale: imageAnim.interpolate({
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [0.5, 1.2, 1]
+                })
+              }
+            ]
+          }
+        ]}
       />
       <Text style={styles.description}>
         I'm David Mould, a junior developer passionate about building mobile
@@ -28,38 +81,32 @@ const AboutScreen = ({ navigation }) => {
       <View style={styles.socialLinks}>
         <Icon
           name="linkedin"
-          size={36} // Increased icon size
-          color={hoveredIcon === 'linkedin' ? '#2867B2' : '#000'}
+          size={30}
+          color="#000"
           onPress={() => {
             Linking.openURL(
               'https://www.linkedin.com/in/david-mould-b6731a21a/'
             )
           }}
           style={styles.icon}
-          onMouseEnter={() => setHoveredIcon('linkedin')}
-          onMouseLeave={() => setHoveredIcon(null)}
         />
         <Icon
           name="github"
-          size={36}
-          color={hoveredIcon === 'github' ? '#211F1F' : '#000'}
+          size={30}
+          color="#000"
           onPress={() => {
             Linking.openURL('https://github.com/DMould123')
           }}
           style={styles.icon}
-          onMouseEnter={() => setHoveredIcon('github')}
-          onMouseLeave={() => setHoveredIcon(null)}
         />
         <Icon
           name="twitter"
-          size={36}
-          color={hoveredIcon === 'twitter' ? '#1DA1F2' : '#000'}
+          size={30}
+          color="#000"
           onPress={() => {
             Linking.openURL('https://twitter.com/DM12_51')
           }}
           style={styles.icon}
-          onMouseEnter={() => setHoveredIcon('twitter')}
-          onMouseLeave={() => setHoveredIcon(null)}
         />
       </View>
       <Button
@@ -77,16 +124,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 30
+    paddingHorizontal: 20
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20
   },
   description: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 20,
     textAlign: 'center'
   },
@@ -98,18 +144,19 @@ const styles = StyleSheet.create({
   },
   socialLinks: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    justifyContent: 'center',
+    marginBottom: 20
   },
   icon: {
     marginHorizontal: 10
   },
   button: {
     backgroundColor: '#007bff',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    marginTop: 20,
-    width: '80%'
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 10,
+    width: '100%'
   }
 })
 
