@@ -5,9 +5,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Alert
+  Alert,
+  Keyboard,
+  ScrollView
 } from 'react-native'
-import { Ionicons } from '@expo/vector-icons' // Assuming you're using Expo for icons
+import { Ionicons } from '@expo/vector-icons'
 
 const ContactScreen = ({ navigation }) => {
   const [name, setName] = useState('')
@@ -15,6 +17,9 @@ const ContactScreen = ({ navigation }) => {
   const [message, setMessage] = useState('')
 
   const handleSubmit = () => {
+    // Dismiss keyboard
+    Keyboard.dismiss()
+
     if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
       Alert.alert('Error', 'Please fill out all fields')
     } else {
@@ -26,13 +31,11 @@ const ContactScreen = ({ navigation }) => {
       setName('')
       setEmail('')
       setMessage('')
-      // Optionally, you can navigate to another screen after submission
-      navigation.navigate('About')
     }
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Contact Us</Text>
       <View style={styles.inputContainer}>
         <Ionicons name="person" size={24} color="black" style={styles.icon} />
@@ -63,16 +66,20 @@ const ContactScreen = ({ navigation }) => {
           multiline
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSubmit}
+        activeOpacity={0.8}
+      >
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
@@ -102,7 +109,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#007bff',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 10
   },
   buttonText: {
     color: '#fff',
