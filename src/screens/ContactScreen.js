@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Alert,
   Keyboard,
-  ScrollView
+  ScrollView,
+  Animated
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -15,6 +16,15 @@ const ContactScreen = ({ navigation }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const titleAnim = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    Animated.timing(titleAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true
+    }).start()
+  }, [])
 
   const handleSubmit = () => {
     // Dismiss keyboard
@@ -36,7 +46,24 @@ const ContactScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Contact Us</Text>
+      <Animated.Text
+        style={[
+          styles.title,
+          {
+            opacity: titleAnim,
+            transform: [
+              {
+                translateY: titleAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [50, 0]
+                })
+              }
+            ]
+          }
+        ]}
+      >
+        Contact Us
+      </Animated.Text>
       <View style={styles.inputContainer}>
         <Ionicons name="person" size={24} color="black" style={styles.icon} />
         <TextInput
