@@ -11,8 +11,22 @@ const QuizScreen = () => {
   const [score, setScore] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false)
+  const [timerSeconds, setTimerSeconds] = useState(15)
+  const [timerActive, setTimerActive] = useState(true)
   const { selectedCategory, selectedDifficulty } = route.params
 
+  // Timer countdown effect
+  useEffect(() => {
+    let timer
+    if (timerActive && timerSeconds > 0) {
+      timer = setTimeout(() => setTimerSeconds(timerSeconds - 1), 1000)
+    } else if (timerSeconds === 0) {
+      handleAnswer(false)
+    }
+    return () => clearTimeout(timer)
+  }, [timerActive, timerSeconds])
+
+  // Fetch quiz questions on component mount
   useEffect(() => {
     const fetchQuizQuestions = async () => {
       try {
@@ -28,23 +42,29 @@ const QuizScreen = () => {
     fetchQuizQuestions()
   }, [route.params])
 
+  // Function to handle user's answer selection
   const handleAnswer = (isCorrect) => {
     if (isCorrect) {
       setScore(score + 1)
     }
     setShowCorrectAnswer(true)
+    setTimerActive(false)
     setTimeout(() => {
       setShowCorrectAnswer(false)
       setCurrentQuestionIndex(currentQuestionIndex + 1)
+      setTimerSeconds(15)
+      setTimerActive(true)
     }, 1000)
   }
 
+  // Function to restart the quiz
   const restartQuiz = () => {
     setCurrentQuestionIndex(0)
     setScore(0)
     navigation.navigate('Home')
   }
 
+  // Render quiz question and options
   const renderQuestion = () => {
     const question = questions[currentQuestionIndex]
     if (!question) {
@@ -93,6 +113,7 @@ const QuizScreen = () => {
               : 'Incorrect!'}
           </Text>
         )}
+        <Text style={styles.timer}>Time Remaining: {timerSeconds} sec</Text>
       </View>
     )
   }
@@ -127,6 +148,10 @@ const styles = StyleSheet.create({
   },
   incorrect: {
     color: 'red'
+  },
+  timer: {
+    marginTop: 10,
+    fontSize: 16
   }
 })
 
