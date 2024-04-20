@@ -59,9 +59,33 @@ export default function App() {
     <QuizProvider>
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="About" component={AboutScreen} />
-          <Tab.Screen name="Contact" component={ContactScreen} />
+          <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="home" color={color} size={size} />
+              )
+            }}
+          />
+          <Tab.Screen
+            name="About"
+            component={AboutScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="info-circle" color={color} size={size} />
+              )
+            }}
+          />
+          <Tab.Screen
+            name="Contact"
+            component={ContactScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="envelope" color={color} size={size} />
+              )
+            }}
+          />
           <Tab.Screen
             name="Quiz"
             options={{
