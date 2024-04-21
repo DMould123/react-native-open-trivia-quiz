@@ -1,6 +1,8 @@
-# React Native Quiz App 🦁 👑
+# React Native Quiz App 📚📱
 
 ## Description 🌍
+
+The Quiz App is a mobile application built using React Native that allows users to take quizzes on various topics. It features multiple screens for navigation, including a home screen, about screen, contact screen, and screens for selecting quiz categories, difficulty levels, and taking quizzes.
 
 ## Objectives 🎯
 
