@@ -38,6 +38,10 @@ cd
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
 
+### Credits 🙏
+
+Special thanks to Open Trivia Database for providing the quiz questions API.
+
 ## Author 📚
 
 - David Mould
