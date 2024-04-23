@@ -1,13 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  Linking,
-  Image,
-  Animated
-} from 'react-native'
+import { View, Text, Button, StyleSheet, Linking, Animated } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const AboutScreen = ({ navigation }) => {

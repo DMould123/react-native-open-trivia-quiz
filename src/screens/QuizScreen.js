@@ -70,7 +70,7 @@ const QuizScreen = () => {
     if (!question) {
       return (
         <View style={styles.container}>
-          <Text style={styles.text}>Quiz completed!</Text>
+          <Text style={styles.text}>Quiz Completed!</Text>
           <Text style={styles.text}>Final Score: {score}</Text>
           <Button title="Restart Quiz" onPress={restartQuiz} />
         </View>
