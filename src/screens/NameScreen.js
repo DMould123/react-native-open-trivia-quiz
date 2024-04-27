@@ -32,7 +32,7 @@ const NameScreen = ({ navigation }) => {
           colors={['#4c669f', '#3b5998', '#192f6a']}
           style={styles.button}
         >
-          <Button title="Next" color="#fff" onPress={handleSubmit} />
+          <Button title="Next" color="#E684AE" onPress={handleSubmit} />
         </LinearGradient>
       </View>
     </View>
@@ -44,14 +44,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'orange'
+    backgroundColor: 'orange' // Solid background color
   },
   background: {
     position: 'absolute',
     left: 0,
     right: 0,
     top: 0,
-    height: '100%'
+    height: '100%',
+    zIndex: -1
   },
   content: {
     width: '80%',
@@ -59,13 +60,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     paddingVertical: 30,
-    borderRadius: 10
+    borderRadius: 10,
+    backgroundColor: '#fff', // Solid background color
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 5
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#fff'
+    color: '#3b5998'
   },
   input: {
     height: 40,
