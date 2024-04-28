@@ -1,15 +1,31 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator
+} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
 const NameScreen = ({ navigation }) => {
   const [inputName, setInputName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   const handleSubmit = () => {
     if (inputName.trim() !== '') {
-      navigation.navigate('CategoryScreen', { name: inputName })
+      setIsLoading(true)
+      // Simulate an asynchronous operation, like fetching data from a server
+      setTimeout(() => {
+        setIsLoading(false)
+        setIsError(false)
+        navigation.navigate('CategoryScreen', { name: inputName })
+      }, 1000)
     } else {
-      console.error('Please enter a valid name')
+      setIsError(true)
     }
   }
 
@@ -22,18 +38,26 @@ const NameScreen = ({ navigation }) => {
       <View style={styles.content}>
         <Text style={styles.title}>Enter your name:</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, isError && styles.inputError]}
           onChangeText={(text) => setInputName(text)}
           value={inputName}
           placeholder="Your Name"
           placeholderTextColor="#ccc"
         />
-        <LinearGradient
-          colors={['#4c669f', '#3b5998', '#192f6a']}
+        {isError && (
+          <Text style={styles.errorText}>Please enter a valid name</Text>
+        )}
+        <TouchableOpacity
           style={styles.button}
+          onPress={handleSubmit}
+          disabled={isLoading}
         >
-          <Button title="Next" color="#E684AE" onPress={handleSubmit} />
-        </LinearGradient>
+          {isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Next</Text>
+          )}
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -44,7 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'orange' // Solid background color
+    backgroundColor: 'orange'
   },
   background: {
     position: 'absolute',
@@ -61,7 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30,
     borderRadius: 10,
-    backgroundColor: '#fff', // Solid background color
+    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -86,11 +110,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: '#000'
   },
+  inputError: {
+    borderColor: '#FF0000'
+  },
+  errorText: {
+    color: '#FF0000',
+    marginBottom: 10
+  },
   button: {
-    padding: 15,
-    width: '100%',
-    alignItems: 'center',
+    backgroundColor: '#4c669f',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
     borderRadius: 5
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff'
   }
 })
 
