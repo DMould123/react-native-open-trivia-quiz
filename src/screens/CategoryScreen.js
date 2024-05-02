@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   categoryItem: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#6C63FF',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333'
+    color: '#fff',
+    textAlign: 'center'
   }
 })
 
