@@ -5,7 +5,8 @@ import {
   Button,
   ActivityIndicator,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native'
 import { useQuiz } from '../context/quizContext'
 import axios from 'axios'
@@ -24,82 +25,109 @@ const CategoryScreen = ({ navigation }) => {
         setLoading(false)
       } catch (error) {
         console.error('Error fetching categories:', error)
-        setError('Error fetching categories. Please try again later.')
+        setError(
+          'Failed to fetch categories. Please check your internet connection and try again.'
+        )
         setLoading(false)
       }
     }
     fetchCategories()
   }, [])
 
+  const handleRetry = () => {
+    setError(null)
+    setLoading(true)
+    fetchCategories()
+  }
+
   const handleCategorySelect = (category) => {
     setSelectedCategory(category)
     setSelectedDifficulty('easy')
-    if (category !== undefined) {
-      navigation.navigate('DifficultyScreen')
-    } else {
-      console.error('Selected category is undefined')
-    }
-  }
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    )
-  }
-
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text>{error}</Text>
-        <Button
-          title="Retry"
-          onPress={() => {
-            setError(null)
-            setLoading(true)
-          }}
-        />
-      </View>
-    )
+    navigation.navigate('DifficultyScreen')
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer}>
-      <Text style={styles.title}>Select Category:</Text>
-      {categories.map((category) => (
-        <View key={category.id} style={styles.categoryItem}>
-          <Button
-            title={category.name}
-            onPress={() => handleCategorySelect(category.id.toString())}
-          />
+    <ScrollView contentContainerStyle={styles.container}>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text style={styles.loadingText}>Loading categories...</Text>
         </View>
-      ))}
+      ) : error ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <Button title="Retry" onPress={handleRetry} />
+        </View>
+      ) : (
+        <>
+          <Text style={styles.title}>Select a Category:</Text>
+          <View style={styles.categoryContainer}>
+            {categories.map((category) => (
+              <TouchableOpacity
+                key={category.id}
+                style={styles.categoryItem}
+                onPress={() => handleCategorySelect(category.id.toString())}
+              >
+                <Text style={styles.categoryText}>{category.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </>
+      )}
     </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff'
-  },
-  contentContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
     paddingTop: 20,
-    paddingBottom: 40
+    paddingBottom: 40,
+    backgroundColor: '#fff'
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#555'
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  errorText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: 'red'
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginBottom: 20,
+    textAlign: 'center'
+  },
+  categoryContainer: {
+    marginTop: 10
   },
   categoryItem: {
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
     marginBottom: 10
+  },
+  categoryText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333'
   }
 })
 
