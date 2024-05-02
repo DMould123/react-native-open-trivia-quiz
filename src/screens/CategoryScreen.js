@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { useQuiz } from '../context/quizContext'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import axios from 'axios'
 
 const CategoryScreen = ({ navigation }) => {
@@ -60,7 +61,9 @@ const CategoryScreen = ({ navigation }) => {
         </View>
       ) : (
         <>
-          <Text style={styles.title}>Select a Category:</Text>
+          <Text style={styles.title}>
+            <Icon name="list" size={20} color="black" /> Select a Category:
+          </Text>
           <View style={styles.categoryContainer}>
             {categories.map((category) => (
               <TouchableOpacity
