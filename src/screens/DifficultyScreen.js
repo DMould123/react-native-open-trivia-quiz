@@ -1,13 +1,10 @@
-import { View, Text, Button, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { useQuiz } from '../context/quizContext'
 
 const DifficultyScreen = ({ navigation }) => {
   const { selectedCategory, selectedDifficulty } = useQuiz()
 
   const handleDifficultySelect = (difficulty) => {
-    console.log('Selected Category:', selectedCategory)
-    console.log('Selected Difficulty:', selectedDifficulty)
-
     if (selectedCategory && selectedDifficulty) {
       navigation.navigate('QuizScreen', {
         selectedCategory,
@@ -21,18 +18,24 @@ const DifficultyScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select Difficulty:</Text>
-      <View style={styles.buttonContainer}>
-        <Button title="Easy" onPress={() => handleDifficultySelect('easy')} />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Medium"
-          onPress={() => handleDifficultySelect('medium')}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button title="Hard" onPress={() => handleDifficultySelect('hard')} />
-      </View>
+      <TouchableOpacity
+        style={[styles.buttonContainer, styles.easyButton]}
+        onPress={() => handleDifficultySelect('easy')}
+      >
+        <Text style={styles.buttonText}>Easy</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.buttonContainer, styles.mediumButton]}
+        onPress={() => handleDifficultySelect('medium')}
+      >
+        <Text style={styles.buttonText}>Medium</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.buttonContainer, styles.hardButton]}
+        onPress={() => handleDifficultySelect('hard')}
+      >
+        <Text style={styles.buttonText}>Hard</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -52,7 +55,25 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginVertical: 10,
-    width: '80%'
+    width: '80%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 10
+  },
+  easyButton: {
+    backgroundColor: '#4CAF50'
+  },
+  mediumButton: {
+    backgroundColor: '#FFC107'
+  },
+  hardButton: {
+    backgroundColor: '#F44336'
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff'
   }
 })
 
