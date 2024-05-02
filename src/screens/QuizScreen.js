@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, Button, StyleSheet } from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const QuizScreen = () => {
   const navigation = useNavigation()
@@ -100,20 +101,30 @@ const QuizScreen = () => {
           />
         </View>
         {showCorrectAnswer && (
-          <Text
-            style={[
-              styles.text,
+          <Icon
+            name={
               selectedAnswer === question.correct_answer
-                ? styles.correct
-                : styles.incorrect
+                ? 'check-circle'
+                : 'times-circle'
+            }
+            size={24}
+            style={[
+              styles.feedbackIcon,
+              selectedAnswer === question.correct_answer
+                ? styles.correctIcon
+                : styles.incorrectIcon
             ]}
-          >
-            {selectedAnswer === question.correct_answer
-              ? 'Correct!'
-              : 'Incorrect!'}
-          </Text>
+          />
         )}
-        <Text style={styles.timer}>Time Remaining: {timerSeconds} sec</Text>
+        <View style={styles.timerContainer}>
+          <Icon
+            name="clock-o"
+            size={20}
+            color="#555"
+            style={styles.clockIcon}
+          />
+          <Text style={styles.timer}>{timerSeconds}</Text>
+        </View>
       </View>
     )
   }
@@ -131,11 +142,11 @@ const styles = StyleSheet.create({
   },
   question: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 20,
     textAlign: 'center'
   },
   buttonContainer: {
-    marginVertical: 5,
+    marginVertical: 10,
     width: '80%'
   },
   text: {
@@ -143,15 +154,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10
   },
-  correct: {
+  correctIcon: {
     color: 'green'
   },
-  incorrect: {
+  incorrectIcon: {
     color: 'red'
   },
+  feedbackIcon: {
+    marginTop: 10
+  },
+  timerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20
+  },
+  clockIcon: {
+    marginRight: 5
+  },
   timer: {
-    marginTop: 10,
-    fontSize: 16
+    fontSize: 24,
+    color: '#555'
   }
 })
 
