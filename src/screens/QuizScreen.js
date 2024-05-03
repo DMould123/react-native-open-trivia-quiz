@@ -16,7 +16,6 @@ const QuizScreen = () => {
   const [timerActive, setTimerActive] = useState(true)
   const { selectedCategory, selectedDifficulty } = route.params
 
-  // Timer countdown effect
   useEffect(() => {
     let timer
     if (timerActive && timerSeconds > 0) {
@@ -27,7 +26,6 @@ const QuizScreen = () => {
     return () => clearTimeout(timer)
   }, [timerActive, timerSeconds])
 
-  // Fetch quiz questions on component mount
   useEffect(() => {
     const fetchQuizQuestions = async () => {
       try {
@@ -43,7 +41,6 @@ const QuizScreen = () => {
     fetchQuizQuestions()
   }, [route.params])
 
-  // Function to handle user's answer selection
   const handleAnswer = (isCorrect) => {
     if (isCorrect) {
       setScore(score + 1)
@@ -58,16 +55,15 @@ const QuizScreen = () => {
     }, 1000)
   }
 
-  // Function to restart the quiz
   const restartQuiz = () => {
     setCurrentQuestionIndex(0)
     setScore(0)
     navigation.navigate('Home')
   }
 
-  // Render quiz question and options
   const renderQuestion = () => {
     const question = questions[currentQuestionIndex]
+    const questionsLeft = questions.length - currentQuestionIndex
     if (!question) {
       return (
         <View style={styles.container}>
@@ -116,6 +112,12 @@ const QuizScreen = () => {
             ]}
           />
         )}
+        <View style={styles.scoreContainer}>
+          <Text style={styles.scoreText}>Score: {score}</Text>
+          <Text style={styles.questionsLeftText}>
+            Questions Left: {questionsLeft}
+          </Text>
+        </View>
         <View style={styles.timerContainer}>
           <Icon
             name="clock-o"
@@ -162,6 +164,18 @@ const styles = StyleSheet.create({
   },
   feedbackIcon: {
     marginTop: 10
+  },
+  scoreContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10
+  },
+  scoreText: {
+    marginRight: 10,
+    fontSize: 16
+  },
+  questionsLeftText: {
+    fontSize: 16
   },
   timerContainer: {
     flexDirection: 'row',
