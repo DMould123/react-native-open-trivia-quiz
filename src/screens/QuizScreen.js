@@ -33,7 +33,16 @@ const QuizScreen = () => {
           selectedCategory,
           selectedDifficulty
         )
-        setQuestions(fetchedQuestions)
+        // Shuffle the answers for each question
+        const shuffledQuestions = fetchedQuestions.map((question) => {
+          const answers = [
+            ...question.incorrect_answers,
+            question.correct_answer
+          ]
+          answers.sort(() => Math.random() - 0.5)
+          return { ...question, answers }
+        })
+        setQuestions(shuffledQuestions)
       } catch (error) {
         console.error('Error fetching questions:', error)
       }
@@ -76,26 +85,17 @@ const QuizScreen = () => {
     return (
       <View style={styles.container}>
         <Text style={styles.question}>{question.question}</Text>
-        {question.incorrect_answers.map((answer, index) => (
+        {question.answers.map((answer, index) => (
           <View style={styles.buttonContainer} key={index}>
             <Button
               title={answer}
               onPress={() => {
-                handleAnswer(false)
+                handleAnswer(answer === question.correct_answer)
                 setSelectedAnswer(answer)
               }}
             />
           </View>
         ))}
-        <View style={styles.buttonContainer}>
-          <Button
-            title={question.correct_answer}
-            onPress={() => {
-              handleAnswer(true)
-              setSelectedAnswer(question.correct_answer)
-            }}
-          />
-        </View>
         {showCorrectAnswer && (
           <Icon
             name={
