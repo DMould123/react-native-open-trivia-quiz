@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button, StyleSheet } from 'react-native'
+import { View, Text, Button, StyleSheet, ActivityIndicator } from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -14,6 +14,7 @@ const QuizScreen = () => {
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false)
   const [timerSeconds, setTimerSeconds] = useState(15)
   const [timerActive, setTimerActive] = useState(true)
+  const [loading, setLoading] = useState(true)
   const { selectedCategory, selectedDifficulty } = route.params
 
   useEffect(() => {
@@ -43,8 +44,10 @@ const QuizScreen = () => {
           return { ...question, answers }
         })
         setQuestions(shuffledQuestions)
+        setLoading(false)
       } catch (error) {
         console.error('Error fetching questions:', error)
+        setLoading(false)
       }
     }
     fetchQuizQuestions()
@@ -71,6 +74,11 @@ const QuizScreen = () => {
   }
 
   const renderQuestion = () => {
+    if (loading) {
+      // If loading, show loading indicator
+      return <ActivityIndicator size="large" color="#0000ff" />
+    }
+
     const question = questions[currentQuestionIndex]
     const questionsLeft = questions.length - currentQuestionIndex
     if (!question) {
