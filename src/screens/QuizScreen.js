@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button, StyleSheet, ActivityIndicator } from 'react-native'
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity
+} from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -84,8 +91,8 @@ const QuizScreen = () => {
     if (!question) {
       return (
         <View style={styles.container}>
-          <Text style={styles.text}>Quiz Completed!</Text>
-          <Text style={styles.text}>Final Score: {score}</Text>
+          <Text style={styles.header}>Quiz Completed!</Text>
+          <Text style={styles.result}>Final Score: {score}</Text>
           <Button title="Restart Quiz" onPress={restartQuiz} />
         </View>
       )
@@ -94,15 +101,24 @@ const QuizScreen = () => {
       <View style={styles.container}>
         <Text style={styles.question}>{question.question}</Text>
         {question.answers.map((answer, index) => (
-          <View style={styles.buttonContainer} key={index}>
-            <Button
-              title={answer}
-              onPress={() => {
-                handleAnswer(answer === question.correct_answer)
-                setSelectedAnswer(answer)
-              }}
-            />
-          </View>
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.button,
+              selectedAnswer === answer && showCorrectAnswer
+                ? answer === question.correct_answer
+                  ? styles.correctButton
+                  : styles.incorrectButton
+                : null
+            ]}
+            onPress={() => {
+              handleAnswer(answer === question.correct_answer)
+              setSelectedAnswer(answer)
+            }}
+            disabled={showCorrectAnswer}
+          >
+            <Text style={styles.buttonText}>{answer}</Text>
+          </TouchableOpacity>
         ))}
         {showCorrectAnswer && (
           <Icon
@@ -120,20 +136,18 @@ const QuizScreen = () => {
             ]}
           />
         )}
-        <View style={styles.scoreContainer}>
-          <Text style={styles.scoreText}>Score: {score}</Text>
-          <Text style={styles.questionsLeftText}>
-            Questions Left: {questionsLeft}
-          </Text>
-        </View>
-        <View style={styles.timerContainer}>
-          <Icon
-            name="clock-o"
-            size={20}
-            color="#555"
-            style={styles.clockIcon}
-          />
-          <Text style={styles.timer}>{timerSeconds}</Text>
+        <View style={styles.statsContainer}>
+          <Text style={styles.statsText}>Score: {score}</Text>
+          <Text style={styles.statsText}>Questions Left: {questionsLeft}</Text>
+          <View style={styles.timerContainer}>
+            <Icon
+              name="clock-o"
+              size={20}
+              color="#555"
+              style={styles.clockIcon}
+            />
+            <Text style={styles.timer}>{timerSeconds}</Text>
+          </View>
         </View>
       </View>
     )
@@ -150,18 +164,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 20
   },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center'
+  },
   question: {
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center'
   },
-  buttonContainer: {
-    marginVertical: 10,
-    width: '80%'
+  button: {
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginBottom: 10,
+    backgroundColor: '#2196F3' // Default button color
   },
-  text: {
+  buttonText: {
     fontSize: 16,
+    fontWeight: 'bold',
     textAlign: 'center',
+    color: '#fff'
+  },
+  correctButton: {
+    backgroundColor: 'green'
+  },
+  incorrectButton: {
+    backgroundColor: 'red'
+  },
+  result: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: 'center'
+  },
+  feedbackIcon: {
     marginTop: 10
   },
   correctIcon: {
@@ -170,25 +208,17 @@ const styles = StyleSheet.create({
   incorrectIcon: {
     color: 'red'
   },
-  feedbackIcon: {
-    marginTop: 10
+  statsContainer: {
+    marginTop: 20,
+    alignItems: 'center'
   },
-  scoreContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10
-  },
-  scoreText: {
-    marginRight: 10,
-    fontSize: 16
-  },
-  questionsLeftText: {
-    fontSize: 16
+  statsText: {
+    fontSize: 16,
+    marginBottom: 5
   },
   timerContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20
+    alignItems: 'center'
   },
   clockIcon: {
     marginRight: 5
