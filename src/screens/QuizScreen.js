@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   View,
   Text,
-  Button,
+  TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity
+  ActivityIndicator
 } from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import ConfettiCannon from 'react-native-confetti-cannon'
 
 const QuizScreen = () => {
   const navigation = useNavigation()
@@ -22,7 +22,9 @@ const QuizScreen = () => {
   const [timerSeconds, setTimerSeconds] = useState(15)
   const [timerActive, setTimerActive] = useState(true)
   const [loading, setLoading] = useState(true)
+  const [showConfetti, setShowConfetti] = useState(false)
   const { selectedCategory, selectedDifficulty } = route.params
+  const confettiRef = useRef(null)
 
   useEffect(() => {
     let timer
@@ -71,12 +73,16 @@ const QuizScreen = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
       setTimerSeconds(15)
       setTimerActive(true)
+      if (currentQuestionIndex === questions.length - 1) {
+        setShowConfetti(true) // Show confetti if it's the last question
+      }
     }, 1000)
   }
 
   const restartQuiz = () => {
     setCurrentQuestionIndex(0)
     setScore(0)
+    setShowConfetti(false) // Reset confetti
     navigation.navigate('Home')
   }
 
@@ -89,11 +95,25 @@ const QuizScreen = () => {
     const question = questions[currentQuestionIndex]
     const questionsLeft = questions.length - currentQuestionIndex
     if (!question) {
+      // If all questions answered, show completion message
       return (
         <View style={styles.container}>
-          <Text style={styles.header}>Quiz Completed!</Text>
-          <Text style={styles.result}>Final Score: {score}</Text>
-          <Button title="Restart Quiz" onPress={restartQuiz} />
+          <Text style={styles.header}>Congratulations!</Text>
+          <Text style={styles.result}>Your Quiz has Ended</Text>
+          <View style={styles.scoreContainer}>
+            <Text style={styles.scoreText}>Final Score:</Text>
+            <Text style={styles.score}>{score}</Text>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={restartQuiz}>
+            <Text style={styles.buttonText}>Restart Quiz</Text>
+          </TouchableOpacity>
+          {showConfetti && (
+            <ConfettiCannon
+              count={200}
+              origin={{ x: -10, y: 0 }}
+              autoStart={true}
+            />
+          )}
         </View>
       )
     }
@@ -178,15 +198,9 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 15,
     paddingHorizontal: 30,
-    borderRadius: 10,
     marginBottom: 10,
-    backgroundColor: '#2196F3' // Default button color
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#fff'
+    backgroundColor: '#DDDDDD',
+    borderRadius: 10
   },
   correctButton: {
     backgroundColor: 'green'
@@ -194,19 +208,22 @@ const styles = StyleSheet.create({
   incorrectButton: {
     backgroundColor: 'red'
   },
-  result: {
+  buttonText: {
     fontSize: 18,
-    marginBottom: 10,
     textAlign: 'center'
   },
-  feedbackIcon: {
-    marginTop: 10
+  scoreContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10
   },
-  correctIcon: {
-    color: 'green'
+  scoreText: {
+    marginRight: 10,
+    fontSize: 16
   },
-  incorrectIcon: {
-    color: 'red'
+  score: {
+    fontSize: 16,
+    fontWeight: 'bold'
   },
   statsContainer: {
     marginTop: 20,
@@ -226,6 +243,15 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 24,
     color: '#555'
+  },
+  feedbackIcon: {
+    marginTop: 10
+  },
+  correctIcon: {
+    color: 'green'
+  },
+  incorrectIcon: {
+    color: 'red'
   }
 })
 
