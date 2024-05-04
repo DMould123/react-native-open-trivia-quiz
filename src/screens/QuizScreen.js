@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 30,
     marginBottom: 10,
-    backgroundColor: '#DDDDDD',
+    backgroundColor: '#2196F3',
     borderRadius: 10
   },
   correctButton: {
