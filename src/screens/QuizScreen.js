@@ -4,7 +4,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native'
 import { fetchQuestions } from '../utils/apiUtils'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -23,8 +24,8 @@ const QuizScreen = () => {
   const [timerActive, setTimerActive] = useState(true)
   const [loading, setLoading] = useState(true)
   const [showConfetti, setShowConfetti] = useState(false)
+  const [showAnswers, setShowAnswers] = useState(false)
   const { selectedCategory, selectedDifficulty } = route.params
-  const confettiRef = useRef(null)
 
   useEffect(() => {
     let timer
@@ -74,7 +75,7 @@ const QuizScreen = () => {
       setTimerSeconds(15)
       setTimerActive(true)
       if (currentQuestionIndex === questions.length - 1) {
-        setShowConfetti(true) // Show confetti if it's the last question
+        setShowConfetti(true)
       }
     }, 1000)
   }
@@ -82,8 +83,13 @@ const QuizScreen = () => {
   const restartQuiz = () => {
     setCurrentQuestionIndex(0)
     setScore(0)
-    setShowConfetti(false) // Reset confetti
+    setShowConfetti(false)
+    setShowAnswers(false)
     navigation.navigate('Home')
+  }
+
+  const toggleShowAnswers = () => {
+    setShowAnswers(!showAnswers)
   }
 
   const renderQuestion = () => {
@@ -113,6 +119,21 @@ const QuizScreen = () => {
               origin={{ x: -10, y: 0 }}
               autoStart={true}
             />
+          )}
+          <TouchableOpacity style={styles.button} onPress={toggleShowAnswers}>
+            <Text style={styles.buttonText}>
+              {showAnswers ? 'Hide Answers' : 'Show Answers'}
+            </Text>
+          </TouchableOpacity>
+          {showAnswers && (
+            <ScrollView style={styles.answerContainer}>
+              {questions.map((q, index) => (
+                <View key={index} style={styles.questionAnswer}>
+                  <Text style={styles.question}>{q.question}</Text>
+                  <Text style={styles.answer}>{q.correct_answer}</Text>
+                </View>
+              ))}
+            </ScrollView>
           )}
         </View>
       )
@@ -252,6 +273,24 @@ const styles = StyleSheet.create({
   },
   incorrectIcon: {
     color: 'red'
+  },
+  answerContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
+    width: '100%',
+    maxHeight: '60%'
+  },
+  questionAnswer: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10
+  },
+  answer: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 })
 
