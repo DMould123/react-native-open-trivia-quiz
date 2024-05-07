@@ -27,20 +27,18 @@ const ContactScreen = ({ navigation }) => {
   }, [])
 
   const handleSubmit = () => {
-    // Dismiss keyboard
     Keyboard.dismiss()
 
     if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
       Alert.alert('Error', 'Please fill out all fields')
     } else {
-      // Here you can implement the logic to submit the form
       console.log('Name:', name)
       console.log('Email:', email)
       console.log('Message:', message)
-      // Reset fields after submission
       setName('')
       setEmail('')
       setMessage('')
+      Alert.alert('Success', 'Message submitted successfully!')
     }
   }
 
@@ -83,10 +81,10 @@ const ContactScreen = ({ navigation }) => {
           keyboardType="email-address"
         />
       </View>
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, { marginBottom: 0 }]}>
         <Ionicons name="chatbox" size={24} color="black" style={styles.icon} />
         <TextInput
-          style={[styles.input, { height: 100 }]}
+          style={[styles.input, styles.messageInput]}
           placeholder="Message"
           value={message}
           onChangeText={setMessage}
@@ -107,15 +105,15 @@ const ContactScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#fff'
+    paddingTop: 50,
+    backgroundColor: '#fff',
+    alignItems: 'center'
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginBottom: 30
   },
   inputContainer: {
     flexDirection: 'row',
@@ -127,20 +125,26 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    borderRadius: 5
   },
   icon: {
     marginRight: 10
   },
   button: {
     backgroundColor: '#007bff',
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 20
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 16
+  },
+  messageInput: {
+    height: 100
   }
 })
 
