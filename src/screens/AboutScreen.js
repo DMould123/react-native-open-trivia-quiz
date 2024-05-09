@@ -1,5 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { View, Text, Button, StyleSheet, Linking, Animated } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Linking,
+  Animated,
+  TouchableOpacity
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 const AboutScreen = ({ navigation }) => {
@@ -10,16 +17,18 @@ const AboutScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (!hasAnimated) {
-      Animated.timing(titleAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true
-      }).start()
-      Animated.timing(imageAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true
-      }).start(() => setHasAnimated(true))
+      Animated.parallel([
+        Animated.timing(titleAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true
+        }),
+        Animated.timing(imageAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true
+        })
+      ]).start(() => setHasAnimated(true))
     }
   }, [hasAnimated])
 
@@ -29,40 +38,14 @@ const AboutScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Animated.Text
-        style={[
-          styles.title,
-          {
-            transform: [
-              {
-                translateY: titleAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [100, 0]
-                })
-              }
-            ]
-          }
-        ]}
-      >
+      <Animated.Text style={[styles.title, { opacity: titleAnim }]}>
         About Me
       </Animated.Text>
       <Animated.Image
         source={{
           uri: 'https://res.cloudinary.com/dele4dvi9/image/upload/v1680781966/memory-game-pictures/1679569823407_u98yg8.jpg'
         }}
-        style={[
-          styles.image,
-          {
-            transform: [
-              {
-                scale: imageAnim.interpolate({
-                  inputRange: [0, 0.5, 1],
-                  outputRange: [0.5, 1.2, 1]
-                })
-              }
-            ]
-          }
-        ]}
+        style={[styles.image, { transform: [{ scale: imageAnim }] }]}
       />
       <Text style={styles.description}>
         I'm David Mould, a junior developer passionate about building mobile
@@ -71,41 +54,32 @@ const AboutScreen = ({ navigation }) => {
         enjoyment.
       </Text>
       <View style={styles.socialLinks}>
-        <Icon
-          name="linkedin"
-          size={30}
-          color="#000"
-          onPress={() => {
+        <TouchableOpacity
+          onPress={() =>
             Linking.openURL(
               'https://www.linkedin.com/in/david-mould-b6731a21a/'
             )
-          }}
-          style={styles.icon}
-        />
-        <Icon
-          name="github"
-          size={30}
-          color="#000"
-          onPress={() => {
-            Linking.openURL('https://github.com/DMould123')
-          }}
-          style={styles.icon}
-        />
-        <Icon
-          name="twitter"
-          size={30}
-          color="#000"
-          onPress={() => {
-            Linking.openURL('https://twitter.com/DM12_51')
-          }}
-          style={styles.icon}
-        />
+          }
+          style={[styles.iconContainer, styles.linkedin]}
+        >
+          <Icon name="linkedin" size={30} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => Linking.openURL('https://github.com/DMould123')}
+          style={[styles.iconContainer, styles.github]}
+        >
+          <Icon name="github" size={30} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => Linking.openURL('https://twitter.com/DM12_51')}
+          style={[styles.iconContainer, styles.twitter]}
+        >
+          <Icon name="twitter" size={30} color="#fff" />
+        </TouchableOpacity>
       </View>
-      <Button
-        title="Visit My Website"
-        onPress={handleVisitWebsite}
-        style={styles.button}
-      />
+      <TouchableOpacity onPress={handleVisitWebsite} style={styles.button}>
+        <Text style={styles.buttonText}>Visit My Website</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -119,14 +93,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   title: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333'
   },
   description: {
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: '#555'
   },
   image: {
     width: 200,
@@ -139,16 +116,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 20
   },
-  icon: {
-    marginHorizontal: 10
+  iconContainer: {
+    marginHorizontal: 10,
+    borderRadius: 20,
+    padding: 10,
+    backgroundColor: '#007bff',
+    elevation: 5
+  },
+  linkedin: {
+    backgroundColor: '#0077b5'
+  },
+  github: {
+    backgroundColor: '#333'
+  },
+  twitter: {
+    backgroundColor: '#1da1f2'
   },
   button: {
     backgroundColor: '#007bff',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 10,
-    width: '100%'
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    elevation: 5
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18
   }
 })
 
