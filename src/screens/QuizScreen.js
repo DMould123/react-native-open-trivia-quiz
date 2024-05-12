@@ -104,7 +104,7 @@ const QuizScreen = () => {
       // If all questions answered, show completion message
       return (
         <View style={styles.container}>
-          <Text style={styles.header}>Congratulations!</Text>
+          <Text style={styles.header}>Congratulations 🎉</Text>
           <Text style={styles.result}>Your Quiz has Ended</Text>
           <View style={styles.scoreContainer}>
             <Text style={styles.scoreText}>Final Score:</Text>
@@ -206,13 +206,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   header: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center'
   },
   question: {
-    fontSize: 18,
+    fontSize: 22,
     marginBottom: 20,
     textAlign: 'center'
   },
@@ -240,10 +240,14 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     marginRight: 10,
-    fontSize: 16
+    fontSize: 25
+  },
+  result: {
+    marginRight: 10,
+    fontSize: 25
   },
   score: {
-    fontSize: 16,
+    fontSize: 25,
     fontWeight: 'bold'
   },
   statsContainer: {
