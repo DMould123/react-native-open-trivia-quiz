@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -26,6 +26,7 @@ const QuizScreen = () => {
   const [showConfetti, setShowConfetti] = useState(false)
   const [showAnswers, setShowAnswers] = useState(false)
   const { selectedCategory, selectedDifficulty } = route.params
+  const [error, setError] = useState(null) // New state for error handling
 
   useEffect(() => {
     let timer
@@ -57,6 +58,7 @@ const QuizScreen = () => {
         setLoading(false)
       } catch (error) {
         console.error('Error fetching questions:', error)
+        setError('Error fetching questions. Please try again.') // Set error message
         setLoading(false)
       }
     }
@@ -69,14 +71,14 @@ const QuizScreen = () => {
     }
     setShowCorrectAnswer(true)
     setTimerActive(false)
+    if (currentQuestionIndex === questions.length - 1) {
+      setShowConfetti(true) // Moved here to avoid missing the last question
+    }
     setTimeout(() => {
       setShowCorrectAnswer(false)
       setCurrentQuestionIndex(currentQuestionIndex + 1)
       setTimerSeconds(15)
       setTimerActive(true)
-      if (currentQuestionIndex === questions.length - 1) {
-        setShowConfetti(true)
-      }
     }, 1000)
   }
 
@@ -96,6 +98,15 @@ const QuizScreen = () => {
     if (loading) {
       // If loading, show loading indicator
       return <ActivityIndicator size="large" color="#0000ff" />
+    }
+
+    if (error) {
+      // If there's an error, display error message
+      return (
+        <View style={styles.container}>
+          <Text style={styles.error}>{error}</Text>
+        </View>
+      )
     }
 
     const question = questions[currentQuestionIndex]
@@ -294,6 +305,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  error: {
+    color: 'red',
+    fontSize: 18,
     textAlign: 'center'
   }
 })
