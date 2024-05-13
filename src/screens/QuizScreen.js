@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -26,7 +26,7 @@ const QuizScreen = () => {
   const [showConfetti, setShowConfetti] = useState(false)
   const [showAnswers, setShowAnswers] = useState(false)
   const { selectedCategory, selectedDifficulty } = route.params
-  const [error, setError] = useState(null) // New state for error handling
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     let timer
@@ -58,7 +58,7 @@ const QuizScreen = () => {
         setLoading(false)
       } catch (error) {
         console.error('Error fetching questions:', error)
-        setError('Error fetching questions. Please try again.') // Set error message
+        setError('Error fetching questions. Please try again.')
         setLoading(false)
       }
     }
@@ -72,7 +72,7 @@ const QuizScreen = () => {
     setShowCorrectAnswer(true)
     setTimerActive(false)
     if (currentQuestionIndex === questions.length - 1) {
-      setShowConfetti(true) // Moved here to avoid missing the last question
+      setShowConfetti(true)
     }
     setTimeout(() => {
       setShowCorrectAnswer(false)

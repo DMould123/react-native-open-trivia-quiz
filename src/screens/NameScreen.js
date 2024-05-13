@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   View,
   Text,
@@ -17,7 +17,6 @@ const NameScreen = ({ navigation }) => {
   const handleSubmit = () => {
     if (inputName.trim() !== '') {
       setIsLoading(true)
-      // Simulate an asynchronous operation, like fetching data from a server
       setTimeout(() => {
         setIsLoading(false)
         setIsError(false)

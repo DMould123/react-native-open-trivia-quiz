@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   StyleSheet,
   View,
@@ -7,9 +7,12 @@ import {
   Animated,
   Easing
 } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
+  const navigation = useNavigation()
+
   const handleStartQuiz = () => {
     navigation.navigate('Quiz', { screen: 'NameScreen' })
   }
