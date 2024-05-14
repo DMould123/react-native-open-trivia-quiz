@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import {
   View,
   Text,
-  Button,
-  ActivityIndicator,
+  TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
   ScrollView,
-  TouchableOpacity
+  Button,
+  Alert
 } from 'react-native'
 import { useQuiz } from '../context/quizContext'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -18,20 +19,21 @@ const CategoryScreen = ({ navigation }) => {
   const [error, setError] = useState(null)
   const [categories, setCategories] = useState([])
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get('https://opentdb.com/api_category.php')
-        setCategories(response.data.trivia_categories)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching categories:', error)
-        setError(
-          'Failed to fetch categories. Please check your internet connection and try again.'
-        )
-        setLoading(false)
-      }
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('https://opentdb.com/api_category.php')
+      setCategories(response.data.trivia_categories)
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      setError(
+        'Failed to fetch categories. Please check your internet connection and try again.'
+      )
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchCategories()
   }, [])
 
