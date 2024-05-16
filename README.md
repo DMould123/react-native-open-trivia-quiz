@@ -5,10 +5,11 @@
 The Quiz App is a mobile application built using React Native that allows users to take quizzes on various topics across varying difficulties. It features multiple screens for navigation, including a home screen, about screen with my social-media links, contact screen, and screens for selecting quiz categories, difficulty levels, and taking quizzes.
 
 ## Objectives 🎯
+
 The objectives of the React Native Quiz App project include:
 
 - 🔍 Implementing a quiz functionality allowing users to select categories and difficulties.
-- 📝 Fetching quiz questions from an external API and displaying them to the user.
+- 📝 Fetching quiz questions from the Open Trivia Database API and displaying them to the user.
 - 📱 Creating an engaging and intuitive user interface for seamless navigation.
 - 🔢 Keeping track of user scores and displaying them at the end of each quiz.
 - 🚀 Showcasing proficiency in React Native, React Navigation, and asynchronous data fetching with Axios.
@@ -36,7 +37,7 @@ npx react-native run-ios       # For iOS
 
 - Select quiz categories and difficulties.
 - Answer quiz questions with multiple-choice options.
-- View quiz scores and correct answers.
+- View quiz score, be able to view both correct and wrong answers after completion of the quiz.
 - Navigate through various screens using bottom tab navigation and stack navigation.
 
 ## License 📝
